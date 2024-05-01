@@ -1,0 +1,174 @@
+                                                                              //==================
+                                                                              //index.css file
+                                                                              //==================
+body{
+  background-color: rgba(20, 18, 18, 0.833);
+}
+.to-do-list {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 50px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.to-do-list h1 {
+  text-align: center;
+  color: #333;
+}
+
+input[type="text"] {
+  width: 73%;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.add-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+ol {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.text{
+  flex: 1;
+ 
+}
+.delete-btn,
+.moveUp-btn,
+.moveDown-btn {
+  padding: 10px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 4px; 
+  font-size: 1.1em;
+}
+
+.moveUp-btn,
+.moveDown-btn {
+  background-color: #2196f3;
+}
+
+.delete-btn:hover,
+.moveUp-btn:hover,
+.moveDown-btn:hover {
+  opacity: 0.8;
+}
+
+          
+                                                                      //==================
+                                                                      //App.jsx file
+                                                                      //==================
+import ToDoList from './ToDoList.jsx';
+function App() {
+return(<ToDoList />);
+}
+export default App
+
+          
+                                                                    //==================
+                                                                    //ToDoList.jsx file
+                                                                    //==================
+import React, {useState} from 'react';
+function ToDoList(){
+
+
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask]= useState("");
+//to display input field for user to add task 
+  function handleInputChange(event){
+    setNewTask(event.target.value);
+  }
+
+  function addTask(){
+      if(newTask.trim() !== ""){
+        setTasks(t => [...t, newTask]);
+        setNewTask("");
+      }
+  }
+    
+
+  function deleteTask(index){
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
+
+  }
+
+  function moveTaskUp(index){
+    if(index>0){
+      const updatedTasks =[...tasks];
+      [updatedTasks[index],updatedTasks[index-1]]= [updatedTasks[index-1], updatedTasks[index]];
+      setTasks(updatedTasks);
+    }
+    
+  }
+
+  function moveTaskDown(index){
+    if(index < tasks.length -1 ){
+      const updatedTasks =[...tasks];
+      [updatedTasks[index],updatedTasks[index+1]]= [updatedTasks[index+1], updatedTasks[index]];
+      setTasks(updatedTasks);
+  }
+}
+
+  return(
+  <div className="to-do-list">
+    <h1>TO DO LIST</h1>
+
+      <div>
+        <input type="text" placeholder="Enter your task/s" value={newTask} onChange={handleInputChange}/> 
+        <button className='add-button' onClick={addTask}>
+         Add
+        </button>
+      </div>
+
+    <ol>
+      {tasks.map((task, index)=> 
+
+        <li key={index}>
+          <span className="text">{task}</span>
+          <button className="moveUp-btn" onClick={ () => {moveTaskUp(index)}}>⬆️</button>
+          <button className="moveDown-btn" onClick={ () => {moveTaskDown(index)}}>⬇️</button>
+          <button className="delete-btn" onClick={ () => {deleteTask(index)}}>Delete</button>
+
+        </li>
+      )}
+    </ol>
+  </div>
+);
+}
+export default  ToDoList;
+
